@@ -7,7 +7,7 @@ from model import User, Movie
 
 from model import connect_to_db, db
 from server import app
-from time import strptime
+from datetime import datetime
 
 
 
@@ -48,22 +48,43 @@ def load_movies():
         row = row.rstrip()
         row_list = row.split("|")
 
-        movie_id, movie_title, released_at, nonsense, imdb_url = row_list[0:5]
-        movie_title = movie_title[:-7]
-        print movie_id
-        print "before edit", released_at
-        released_at = released_at.strip('-')            #strip not working
-        print "after stripping", released_at
+        #Check the ID
+        if type(row_list[0]) != type(5):
+            print type(row_list[0])
+            print type(5)
+            print "Are we failling on line 53?"
+            continue ## there is a way to tell it to skip this iternation and continue for loop
+        else:
+            movie_id = row_list[0]
 
-        released_at = strptime(released_at, "%d%b%y")   #TimeDate not in correct formate yet :)
-        print "after edit", released_at
+        #Check the datetime format
+        print "this is the movie date before checking ", row_list[2]
+        if len(row_list[2]) != 11:
+            continue## there is a way to tell it to skip this iternation and continue for loop
+            print "the movie date did not pass test"
+        else:
+            released_at = row_list[2]
 
-        movie = Movie(movie_id=movie_id, movie_title=movie_title, released_at=released_at, imdb_url=imdb_url)
+        #Check if the movie title and date is already in the database
+        check_movie = Movie.query.filter(Movie.movie_title == row_list[1]).first()
+        if check_movie != None:
+            continue## there is a way to tell it to skip this iternation and continue for loop
+            print "Move already in here ", row_list[1]
+        else:
+            movie_title = row_list[1]
+            movie_title = movie_title[:-7]
+
+        imdb_url = row_list[4]
+        print "movie title:", movie_title
+        print "released at:", released_at
+
+        released_datetime = datetime.strptime(released_at, "%d-%b-%Y")              #made a datetime object
+        print "relased datatime:", released_datetime
+        movie = Movie(movie_id=movie_id, movie_title=movie_title, released_datetime=released_datetime, imdb_url=imdb_url)
 
         db.session.add(movie)
-        break
 
-    db.session.commit()
+        db.session.commit()
 
 
 def load_ratings():
