@@ -39,8 +39,8 @@ class Movie(db.Model):
 
     movie_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     movie_title = db.Column(db.String(100), nullable=False)
-    released_at = db.Column(db.Datetime)
-    imdb_url = db.Column(db.String)
+    released_at = db.Column(db.DateTime)
+    imdb_url = db.Column(db.String(200))
 
     def __repr__(self):
         """Provide helpful representation of a movie object when printed"""
@@ -62,7 +62,7 @@ class Rating(db.Model):
 
         return "<Rating rating_id= {} movie_id= {} user_id= {}".format(self.rating_id, 
                                                           self.movie_id, self.user_id)
-        
+
 
 ##############################################################################
 # Helper functions

@@ -1,12 +1,14 @@
 """Utility file to seed ratings database from MovieLens data in seed_data/"""
 
 
-from model import User
+from model import User, Movie
 # from model import Rating
 # from model import Movie
 
 from model import connect_to_db, db
 from server import app
+from time import strptime
+
 
 
 def load_users():
@@ -36,6 +38,32 @@ def load_users():
 
 def load_movies():
     """Load movies from u.item into database."""
+
+    print "Movies"
+    #When you start the movie load, clear out any movies from a previous load
+    Movie.query.delete()
+
+    #Read u.movie file and insert data
+    for row in open("seed_data/u.item"):
+        row = row.rstrip()
+        row_list = row.split("|")
+
+        movie_id, movie_title, released_at, nonsense, imdb_url = row_list[0:5]
+        movie_title = movie_title[:-7]
+        print movie_id
+        print "before edit", released_at
+        released_at = released_at.strip('-')            #strip not working
+        print "after stripping", released_at
+
+        released_at = strptime(released_at, "%d%b%y")   #TimeDate not in correct formate yet :)
+        print "after edit", released_at
+
+        movie = Movie(movie_id=movie_id, movie_title=movie_title, released_at=released_at, imdb_url=imdb_url)
+
+        db.session.add(movie)
+        break
+
+    db.session.commit()
 
 
 def load_ratings():
