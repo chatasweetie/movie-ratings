@@ -70,13 +70,14 @@ def load_movies():
             # check_movie = Movie.query.filter(Movie.movie_title == row_list[1]).first()
             # if check_movie != None:
             #     continue## there is a way to tell it to skip this iternation and continue for loop
-            #     print "Move already in here ", row_list[1]
+            #     print "Movie already in here ", row_list[1]
             # else:
             #     movie_title = row_list[1]
             #     movie_title = movie_title[:-7]
+            # TODO: compare IMDB url links too!
         
         movie_title = row_list[1]
-        movie_title = movie_title[:-7]
+        movie_title = movie_title[:-7] #TODO: make sure that it is not cuting off the title, maybe index and check if Numb or if ()
         imdb_url = row_list[4]
         
         released_datetime = datetime.strptime(released_at, "%d-%b-%Y")              #made a datetime object
@@ -85,7 +86,7 @@ def load_movies():
 
         db.session.add(movie)
 
-        db.session.commit()
+    db.session.commit()
 
 
 def load_ratings():
