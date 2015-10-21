@@ -1,7 +1,7 @@
 """Utility file to seed ratings database from MovieLens data in seed_data/"""
 
 
-from model import User, Movie
+from model import User, Movie, Rating
 # from model import Rating
 # from model import Movie
 
@@ -58,18 +58,9 @@ def load_movies():
         if is_number(row_list[0]) == True:
             movie_id = int(row_list[0])
         else:
-            print "That ain't no numba"
             continue
 
-        # if int(row_list[0]):
-        #     movie_id = int(row_list[0])
-        #     print "the movie id: ", movie_id
-        # else:
-        #     continue
-
-
         #Check the datetime format
-
         if len(row_list[2]) != 11:
             continue## there is a way to tell it to skip this iternation and continue for loop
         else:
@@ -86,10 +77,8 @@ def load_movies():
         
         movie_title = row_list[1]
         movie_title = movie_title[:-7]
-        
         imdb_url = row_list[4]
         
-
         released_datetime = datetime.strptime(released_at, "%d-%b-%Y")              #made a datetime object
         
         movie = Movie(movie_id=movie_id, movie_title=movie_title, released_datetime=released_datetime, imdb_url=imdb_url)
@@ -101,6 +90,21 @@ def load_movies():
 
 def load_ratings():
     """Load ratings from u.data into database."""
+    print "Ratings"
+    #When you start the movie load, clear out any movies from a previous load
+    Rating.query.delete()
+
+    #Read u.ratings file and insert data
+    for row in open("seed_data/u.data"):
+        row = row.rstrip()
+        row_list = row.split()
+
+        user_id, movie_id, score = row_list[0:3]
+
+        rating = Rating(user_id=user_id, movie_id=movie_id, score=score)
+
+        db.session.add(rating)
+    db.session.commit()
 
 
 if __name__ == "__main__":
