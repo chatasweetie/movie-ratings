@@ -33,16 +33,18 @@ def login():
 
     query = User.query.filter(User.email == email).first()
     print query
-    if query is None:
+    if query == None:
         #Let the user know that its bad email
         print "I'm not in the data base"
-        flash("Your email is incorrect or not in the system")
-        return redirect("homepage.html")
+        flash("Your email is incorrect or not in the system") 
     else:
         if password != query.password:
             print "Incorrect password"
+            flash("Your password is incorrect.")
         else:
             print "Log In complete!"
+            flash("Logged in successfully!")
+
     return render_template("homepage.html")
 
 @app.route('/users')
