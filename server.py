@@ -2,16 +2,16 @@
 
 from jinja2 import StrictUndefined
 
-from flask import Flask
+from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import connect_to_db, db
+from model import connect_to_db, db, User, Rating, Movie
 
 
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
-app.secret_key = "ABC"
+app.secret_key = "12345catsarecats"
 
 # Normally, if you use an undefined variable in Jinja2, it fails silently.
 # This is horrible. Fix this so that, instead, it raises an error.
@@ -22,7 +22,37 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
 
-    return "<html><body>Placeholder for the homepage.</body></html>"
+    return render_template("homepage.html")
+
+@app.route('/login', methods=["POST"])
+def login():
+    email = request.form.get("email")
+    print "email: ", email
+    password = request.form.get("password")
+    print "password: ", password
+
+    query = User.query.filter(User.email == email).first()
+    print query
+    if query is None:
+        #Let the user know that its bad email
+        print "I'm not in the data base"
+        flash("Your email is incorrect or not in the system")
+        return redirect("homepage.html")
+    else:
+        if password != query.password:
+            print "Incorrect password"
+        else:
+            print "Log In complete!"
+    return render_template("homepage.html")
+
+@app.route('/users')
+def user_list():
+    """Show a list of the users"""
+
+    users = User.query.all()
+
+    return render_template('user_list.html', users=users)
+
 
 
 if __name__ == "__main__":
