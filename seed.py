@@ -35,6 +35,8 @@ def load_users():
     # Once we're done, we should commit our work
     db.session.commit()
 
+
+
 def is_number(s):
     try:
         int(s)

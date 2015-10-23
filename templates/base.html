@@ -27,6 +27,8 @@
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
+        
+        {% if "session_email" not in session %}
         <form class="navbar-form navbar-left" id="login" action="/login" method="POST">
           <div class="form-group">
                 <input type="text" name="email" id="email" class="form-control" placeholder="Email">
@@ -34,10 +36,17 @@
           </div>
           <button type="submit" class="btn btn-default">Log In</button>
         </form>
+        <a class="navbar-brand" href="/check_create_user">Sign Up</a>
+        {% else %}
+        <form class="navbar-form navbar-left" id="logout" action="/logout" method="POST">
+          <button type="submit" class="btn btn-default">Log Out</button>
+        </form>
+        {% endif %}
         </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
+
 
 
   {% with messages = get_flashed_messages() %}
