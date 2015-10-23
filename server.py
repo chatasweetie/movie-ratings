@@ -105,7 +105,25 @@ def check_create_user():
     return redirect('.') 
 
 
+@app.route('/movies')
+def list_movies():
+    """Creates a list of movies in the database that can be reviewed."""
 
+    movies = Movie.query.order_by(Movie.movie_title).all()
+    print movies
+
+    return render_template("movie_list.html", movies=movies)
+
+
+@app.route('/movie/<int:movie_id>')
+def list_movie_details(movie_id):
+    """ Show a detailed profile page of a movie and all ratings associated with that movie.
+    If user is logged in, 'Rate This Movie' button will appear."""
+    print "movie id", movie_id
+
+    movie_to_show = Movie.query.filter(Movie.movie_id == movie_id).first()
+    print "to show", movie_to_show
+    return render_template("movie_details.html", movie_to_show=movie_to_show)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point

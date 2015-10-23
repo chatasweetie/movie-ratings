@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h2>{{ movie_to_show.movie_title }}</h2>
+    <br> <br>
+    <h4>Movie Details</h4><br>
+    Released on: {{ movie_to_show.released_datetime }}<br>
+    IMDB URL: {{ movie_to_show.imbd_url }}<br>
+    <br><br>
+    <h4>Movie Ratings</h4>
+    <br><br>
+
+
+
+{% endblock %}
